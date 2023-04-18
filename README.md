@@ -8,10 +8,16 @@
   - [Table of Contents](#table-of-contents)
   - [Abstract](#abstract)
   - [Motivation](#motivation)
+  - [Rationale](#rationale)
+    - [Granular Approvals](#granular-approvals)
+    - [Removal of Batching](#removal-of-batching)
+    - [Removal of Required Callbacks](#removal-of-required-callbacks)
+    - [Removal of `safe*` Naming](#removal-of-safe-naming)
   - [Specification](#specification)
     - [Definitions](#definitions)
     - [Methods](#methods)
       - [totalSupply](#totalsupply)
+      - [decimals](#decimals)
       - [balanceOf](#balanceof)
       - [allowance](#allowance)
       - [transfer](#transfer)
@@ -22,6 +28,7 @@
       - [Transfer](#transfer-1)
       - [OperatorSet](#operatorset)
       - [Approval](#approval)
+  - [Extensions](#extensions)
   - [Reference Implementation](#reference-implementation)
 
 ## Abstract
@@ -36,6 +43,40 @@ with code to implement callbacks returning specific values and batch-calls in th
 addition, the single operator permission scheme grants unlimited allowance on every token ID in the
 contract.
 
+## Rationale
+
+### Granular Approvals
+
+While the "operator model" from ERC-1155 allows an account to set another account as an operator,
+giving full permissions to transfer any amount of any token id on behalf of the owner, this may not
+always be the desired permission scheme. The "allowance model" from ERC-20 allows an account to set
+an explicit amount of the token that another account can spend on the owner's behalf. This standard
+requires both be implemented, with the only modification being to the "allowance model" where the
+token id must be specified as well. This allows an account to grant specific approvals to specific
+token ids, infinite approvals to specific token ids, or infinite approvals to all token ids. If an
+account is set as an operator, the allowance SHOULD NOT be decreased when tokens are transferred on
+behalf of the owner.
+
+### Removal of Batching
+
+While batching operations is useful, its place should not be in the standard itself, but rather on
+a case-by-case basis. This allows for different tradeoffs to be made in terms of calldata layout,
+which may be especially useful for specific applications such as rollups that commit calldata to
+global storage.
+
+### Removal of Required Callbacks
+
+Callbacks MAY be used within a multi-token compliant contract, but it is not required. This allows
+for more gas efficient methods by reducing external calls and additional checks.
+
+### Removal of `safe*` Naming
+
+The `safeTransfer` and `safeTransferFrom` naming conventions are misleading, especially in the
+context of ERC-1155 and ERC-721, as they require external calls to receiver accounts with code,
+passing the execution flow to an arbitrary contract, provided the receiver contract returns a
+specific value. The combination of removing mandatory callbacks and removing the word "safe" from
+all method names improves the safety of the control flow by default.
+
 ## Specification
 
 ### Definitions
@@ -49,7 +90,7 @@ contract.
 
 #### totalSupply
 
-The total supply for a given token id.
+The total supply for a token id.
 
 MUST be equal to the total number of units of a token id that exists.
 
@@ -65,6 +106,26 @@ MUST be equal to the total number of units of a token id that exists.
   outputs:
     - name: amount
       type: uint256
+```
+
+#### decimals
+
+The number of decimals for a token id.
+
+MAY be ignored if not explicitly set to a non-zero value.
+
+```yaml
+- name: decimals
+  type: function
+  stateMutability: view
+
+  inputs:
+    - name: id
+      type: uint256
+
+  outputs:
+  - name: amount
+    type: uint8
 ```
 
 #### balanceOf
@@ -149,7 +210,8 @@ MUST revert when the caller's balance for the token id is insufficient.
 
 MUST log the Transfer event.
 
-MUST decrease the caller's allowance for the sender if the allowance is not infinite.
+MUST decrease the caller's allowance by the same amount of the sender's balance decrease if the
+caller's allowance is not infinite.
 
 SHOULD decrease the sender's balance for the token id by the amount.
 
@@ -308,6 +370,10 @@ MAY be logged when the approval is decreased by the transferFrom function.
       indexed: false
       type: uint256
 ```
+
+## Extensions
+
+> TODO
 
 ## Reference Implementation
 

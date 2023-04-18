@@ -14,30 +14,28 @@ contract ERCNTest is Test {
     error InsufficientBalance(address owner, uint256 id);
     error InsufficientPermission(address spender, uint256 id);
 
-    event Transfer(
-        address indexed sender,
-        address indexed receiver,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Transfer(address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
 
-    event OperatorSet(
-        address indexed owner,
-        address indexed spender,
-        bool approved
-    );
+    event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 indexed id, uint256 amount);
 
     function setUp() public {
         ercn = new ERCNMock();
 
         ercn.mint(alice, 1, 1);
+    }
+
+    function testTotalSupply() public {
+        assertEq(ercn.totalSupply(tokenId), 1);
+    }
+
+    function testDecimals() public {
+        assertEq(ercn.decimals(tokenId), 0);
+
+        ercn.setDecimals(tokenId, 18);
+
+        assertEq(ercn.decimals(tokenId), 18);
     }
 
     function testBalanceOf() public {

@@ -17,37 +17,26 @@ contract ERCN {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    event Transfer(
-        address indexed sender,
-        address indexed receiver,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Transfer(address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
 
     /// @notice The event emitted when an operator is set.
     /// @param owner The address of the owner.
     /// @param spender The address of the spender.
     /// @param approved The approval status.
-    event OperatorSet(
-        address indexed owner,
-        address indexed spender,
-        bool approved
-    );
+    event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
     /// @notice The event emitted when an approval occurs.
     /// @param owner The address of the owner.
     /// @param spender The address of the spender.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 indexed id, uint256 amount);
 
     /// @notice The total supply of each id.
     mapping(uint256 id => uint256 amount) public totalSupply;
+
+    /// @notice The number of decimals for each id.
+    mapping(uint256 id => uint8 amount) public decimals;
 
     /// @notice Owner balance of an id.
     mapping(address owner => mapping(uint256 id => uint256 amount)) public balanceOf;
@@ -76,8 +65,9 @@ contract ERCN {
     /// @param amount The amount of the token.
     function transferFrom(address sender, address receiver, uint256 id, uint256 amount) public {
         if (sender != msg.sender && !isOperator[sender][msg.sender]) {
-            if (allowance[sender][msg.sender][id] < amount)
+            if (allowance[sender][msg.sender][id] < amount) {
                 revert InsufficientPermission(msg.sender, id);
+            }
             allowance[sender][msg.sender][id] -= amount;
         }
         if (balanceOf[sender][id] < amount) revert InsufficientBalance(sender, id);

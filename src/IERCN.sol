@@ -7,39 +7,30 @@ interface IERCN {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    event Transfer(
-        address indexed sender,
-        address indexed receiver,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Transfer(address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
 
     /// @notice The event emitted when an operator is set.
     /// @param owner The address of the owner.
     /// @param spender The address of the spender.
     /// @param approved The approval status.
-    event OperatorSet(
-        address indexed owner,
-        address indexed spender,
-        bool approved
-    );
+    event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
     /// @notice The event emitted when an approval occurs.
     /// @param owner The address of the owner.
     /// @param spender The address of the spender.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 indexed id, uint256 amount);
 
     /// @notice The total supply of each id.
     /// @param id The id of the token.
     /// @return amount The total supply of the token.
     function totalSupply(uint256 id) external view returns (uint256 amount);
+
+    /// @notice The number of decimals for each id.
+    /// @param id The id of the token.
+    /// @return amount The number of decimals of the token.
+    function decimals(uint256 id) external view returns (uint8 amount);
 
     /// @notice Owner balance of an id.
     /// @param owner The address of the owner.
@@ -52,11 +43,7 @@ interface IERCN {
     /// @param spender The address of the spender.
     /// @param id The id of the token.
     /// @return amount The allowance of the token.
-    function allowance(
-        address owner,
-        address spender,
-        uint256 id
-    ) external view returns (uint256 amount);
+    function allowance(address owner, address spender, uint256 id) external view returns (uint256 amount);
 
     /// @notice Checks if a spender is approved by an owner as an operator
     /// @param owner The address of the owner.
