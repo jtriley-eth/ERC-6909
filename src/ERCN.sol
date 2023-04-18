@@ -44,7 +44,7 @@ contract ERCN {
     /// @notice Spender allowance of an id.
     mapping(address owner => mapping(address spender => mapping(uint256 id => uint256 amount))) public allowance;
 
-    /// @notice Checks if a spender is approved by an owner as an operator
+    /// @notice Checks if a spender is approved by an owner as an operator.
     mapping(address owner => mapping(address spender => bool)) public isOperator;
 
     /// @notice Transfers an amount of an id from the caller to a receiver.
