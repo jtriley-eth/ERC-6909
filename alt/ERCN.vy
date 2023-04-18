@@ -59,3 +59,8 @@ def approve(spender: address, id: uint256, amount: uint256):
 def setOperator(spender: address, approved: bool):
     self.isOperator[msg.sender][spender] = approved
     log OperatorSet(msg.sender, spender, approved)
+
+@external
+@pure
+def supportsInterface(interfaceID: bytes4) -> bool:
+    return interfaceID in [0x01ffc9a7, 0x8da179e8]
