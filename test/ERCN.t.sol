@@ -163,4 +163,11 @@ contract ERCNTest is Test {
         vm.prank(bob);
         ercn.transferFrom(alice, bob, tokenId, 1);
     }
+
+    function testSupportsInterface() public {
+        // type(IERCN).interfaceId
+        // type(IERC165).interfaceId
+        assertTrue(ercn.supportsInterface(0x8da179e8));
+        assertTrue(ercn.supportsInterface(0x01ffc9a7));
+    }
 }

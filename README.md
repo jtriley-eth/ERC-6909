@@ -28,6 +28,7 @@
       - [Transfer](#transfer-1)
       - [OperatorSet](#operatorset)
       - [Approval](#approval)
+  - [Interface ID](#interface-id)
   - [Extensions](#extensions)
     - [ERCNMetadata](#ercnmetadata)
       - [Methods](#methods-1)
@@ -370,6 +371,10 @@ MAY be logged when the approval is decreased by the transferFrom method.
       indexed: false
       type: uint256
 ```
+
+## Interface ID
+
+The interface ID is `0x8da179e8`.
 
 ## Extensions
 

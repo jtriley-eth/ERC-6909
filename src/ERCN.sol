@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-contract ERCN {
+import "src/IERCN.sol";
+import "src/IERC165.sol";
+
+contract ERCN is IERCN, IERC165 {
     /// @dev Thrown when owner balance for id is insufficient.
     /// @param owner The address of the owner.
     /// @param id The id of the token.
@@ -11,26 +14,6 @@ contract ERCN {
     /// @param spender The address of the spender.
     /// @param id The id of the token.
     error InsufficientPermission(address spender, uint256 id);
-
-    /// @notice The event emitted when a transfer occurs.
-    /// @param sender The address of the sender.
-    /// @param receiver The address of the receiver.
-    /// @param id The id of the token.
-    /// @param amount The amount of the token.
-    event Transfer(address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
-
-    /// @notice The event emitted when an operator is set.
-    /// @param owner The address of the owner.
-    /// @param spender The address of the spender.
-    /// @param approved The approval status.
-    event OperatorSet(address indexed owner, address indexed spender, bool approved);
-
-    /// @notice The event emitted when an approval occurs.
-    /// @param owner The address of the owner.
-    /// @param spender The address of the spender.
-    /// @param id The id of the token.
-    /// @param amount The amount of the token.
-    event Approval(address indexed owner, address indexed spender, uint256 indexed id, uint256 amount);
 
     /// @notice The total supply of each id.
     mapping(uint256 id => uint256 amount) public totalSupply;
@@ -91,5 +74,12 @@ contract ERCN {
     function setOperator(address spender, bool approved) public {
         isOperator[msg.sender][spender] = approved;
         emit OperatorSet(msg.sender, spender, approved);
+    }
+
+    /// @notice Checks if a contract implements an interface.
+    /// @param interfaceId The interface identifier, as specified in ERC-165.
+    /// @return supported True if the contract implements `interfaceId` and
+    function supportsInterface(bytes4 interfaceId) public pure returns (bool supported) {
+        return interfaceId == type(IERCN).interfaceId || interfaceId == type(IERC165).interfaceId;
     }
 }
