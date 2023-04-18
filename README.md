@@ -87,10 +87,12 @@ all method names improves the safety of the control flow by default.
 
 ### Definitions
 
-- infinite: the maximum value for a uint256 (`2 ** 256 - 1`).
-- caller: the caller of the current context (`msg.sender`).
-- spender: an account that transfers tokens on behalf of another account.
-- operator: an account that has unlimited transfer permissions on all token ids for another account.
+- infinite: The maximum value for a uint256 (`2 ** 256 - 1`).
+- caller: The caller of the current context (`msg.sender`).
+- spender: An account that transfers tokens on behalf of another account.
+- operator: An account that has unlimited transfer permissions on all token ids for another account.
+- mint: The creation of an amount of tokens. This MAY happen in a mint method or as a tranfser from the zero address.
+- burn: The removal an amount of tokens. This MAY happen in a burn method or as a transfer from the zero address.
 
 ### Methods
 
@@ -98,7 +100,7 @@ all method names improves the safety of the control flow by default.
 
 The total supply for a token id.
 
-MUST be equal to the total number of units of a token id that exists.
+MUST be equal to the sum of the `balanceOf` of all accounts of the token id.
 
 ```yaml
 - name: totalSupply
@@ -185,10 +187,6 @@ MUST revert when the caller's balance for the token id is insufficient.
 
 MUST log the Transfer event.
 
-SHOULD decrease the caller's balance for the token id by the amount.
-
-SHOULD increase the receiver's balance for the token id by the amount.
-
 ```yaml
 - name: transfer
   type: function
@@ -218,10 +216,6 @@ MUST log the Transfer event.
 
 MUST decrease the caller's allowance by the same amount of the sender's balance decrease if the
 caller's allowance is not infinite.
-
-SHOULD decrease the sender's balance for the token id by the amount.
-
-SHOULD increase the receiver's balance for the token id by the amount.
 
 SHOULD NOT decrease the caller's allowance for the token id for the sender if the allowance is
 infinite.
@@ -356,7 +350,7 @@ owner's behalf.
 
 MUST be logged when the approval is set by the owner.
 
-MAY be logged when the approval is decreased by the transferFrom function.
+MAY be logged when the approval is decreased by the transferFrom method.
 
 ```yaml
 - name: Approval
