@@ -45,7 +45,7 @@ The following standard specifies a multi-token contract as a simplified alternat
 
 ## Motivation
 
-The current multi-token standard includes unnecessary featues such as requiring recipient accounts
+The current multi-token standard includes unnecessary features such as requiring recipient accounts
 with code to implement callbacks returning specific values and batch-calls in the specification. In
 addition, the single operator permission scheme grants unlimited allowance on every token ID in the
 contract.
@@ -68,7 +68,7 @@ behalf of the owner.
 
 While batching operations is useful, its place should not be in the standard itself, but rather on
 a case-by-case basis. This allows for different tradeoffs to be made in terms of calldata layout,
-which may be especially useful for specific applications such as rollups that commit calldata to
+which may be especially useful for specific applications such as roll-ups that commit calldata to
 global storage.
 
 ### Removal of Required Callbacks
@@ -92,7 +92,7 @@ all method names improves the safety of the control flow by default.
 - caller: The caller of the current context (`msg.sender`).
 - spender: An account that transfers tokens on behalf of another account.
 - operator: An account that has unlimited transfer permissions on all token ids for another account.
-- mint: The creation of an amount of tokens. This MAY happen in a mint method or as a tranfser from the zero address.
+- mint: The creation of an amount of tokens. This MAY happen in a mint method or as a transfer from the zero address.
 - burn: The removal an amount of tokens. This MAY happen in a burn method or as a transfer from the zero address.
 
 ### Methods
@@ -159,7 +159,7 @@ The total number of units of a token id that an account owns.
 
 #### allowance
 
-The total number of units of a token id that a spender is premitted to transfer on behalf of an
+The total number of units of a token id that a spender is permitted to transfer on behalf of an
 owner.
 
 ```yaml
