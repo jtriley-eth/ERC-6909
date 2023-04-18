@@ -12,7 +12,7 @@
     - [Granular Approvals](#granular-approvals)
     - [Removal of Batching](#removal-of-batching)
     - [Removal of Required Callbacks](#removal-of-required-callbacks)
-    - [Removal of `safe*` Naming](#removal-of-safe-naming)
+    - [Removal of "Safe" Naming](#removal-of-safe-naming)
   - [Specification](#specification)
     - [Definitions](#definitions)
     - [Methods](#methods)
@@ -29,6 +29,12 @@
       - [OperatorSet](#operatorset)
       - [Approval](#approval)
   - [Extensions](#extensions)
+    - [ERCNMetadata](#ercnmetadata)
+      - [Methods](#methods-1)
+        - [name](#name)
+        - [symbol](#symbol)
+        - [tokenURI](#tokenuri)
+      - [Metadata Structure](#metadata-structure)
   - [Reference Implementation](#reference-implementation)
 
 ## Abstract
@@ -69,7 +75,7 @@ global storage.
 Callbacks MAY be used within a multi-token compliant contract, but it is not required. This allows
 for more gas efficient methods by reducing external calls and additional checks.
 
-### Removal of `safe*` Naming
+### Removal of "Safe" Naming
 
 The `safeTransfer` and `safeTransferFrom` naming conventions are misleading, especially in the
 context of ERC-1155 and ERC-721, as they require external calls to receiver accounts with code,
@@ -373,7 +379,86 @@ MAY be logged when the approval is decreased by the transferFrom function.
 
 ## Extensions
 
-> TODO
+### ERCNMetadata
+
+#### Methods
+
+##### name
+
+The name of the contract.
+
+```yaml
+- name: name
+  type: function
+  stateMutability: view
+
+  inputs: []
+
+  outputs:
+    - name: name
+      type: string
+```
+
+##### symbol
+
+The ticker symbol of the contract.
+
+```yaml
+- name: symbol
+  type: function
+  stateMutability: view
+
+  inputs: []
+
+  outputs:
+    - name: symbol
+      type: string
+```
+
+##### tokenURI
+
+The URI for a token id.
+
+MAY revert if the token id does not exist.
+
+```yaml
+- name: tokenURI
+  type: function
+  stateMutability: view
+
+  inputs:
+    - name: id
+      type: uint256
+
+  outputs:
+    - name: uri
+      type: string
+```
+
+#### Metadata Structure
+
+The metadata specification closely follows that of the ERC-721 JSON schema.
+
+```json
+{
+  "title": "Asset Metadata",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Identifies the token"
+    },
+    "description": {
+      "type": "string",
+      "description": "Describes the token"
+    },
+    "image": {
+      "type": "string",
+      "description": "A URI pointing to an image resource."
+    }
+  }
+}
+```
 
 ## Reference Implementation
 
