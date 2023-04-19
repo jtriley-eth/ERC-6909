@@ -1,10 +1,10 @@
-# The "Pretty Obvious If You Think About It" Multi-Token Standard
+# Multi-Token Standard
 
 **Requires** [EIP-165](https://eips.ethereum.org/EIPS/eip-165)
 
 ## Table of Contents
 
-- [The "Pretty Obvious If You Think About It" Multi-Token Standard](#the-pretty-obvious-if-you-think-about-it-multi-token-standard)
+- [Multi-Token Standard](#multi-token-standard)
   - [Table of Contents](#table-of-contents)
   - [Abstract](#abstract)
   - [Motivation](#motivation)
