@@ -2,32 +2,32 @@
 pragma solidity 0.8.19;
 
 import "forge-std/Test.sol";
-import "test/mock/ERCNMetadataMock.sol";
+import "test/mock/ERC6909MetadataMock.sol";
 
-contract ERCNMetadataTest is Test {
-    ERCNMetadataMock ercn;
+contract ERC6909MetadataTest is Test {
+    ERC6909MetadataMock erc6909;
 
     error InvalidId(uint256 id);
 
     function setUp() public {
-        ercn = new ERCNMetadataMock();
+        erc6909 = new ERC6909MetadataMock();
     }
 
     function testName() public {
-        assertEq(ercn.name(), "Example ERCN Metadata");
+        assertEq(erc6909.name(), "Example ERC6909 Metadata");
     }
 
     function testSymbol() public {
-        assertEq(ercn.symbol(), "EEM");
+        assertEq(erc6909.symbol(), "EEM");
     }
 
     function testTokenURI() public {
-        ercn.mint(vm.addr(1), 1, 1);
-        assertEq(ercn.tokenURI(1), "<base_uri>/1");
+        erc6909.mint(vm.addr(1), 1, 1);
+        assertEq(erc6909.tokenURI(1), "<base_uri>/1");
     }
 
     function testTokenURIInvalidId() public {
         vm.expectRevert(abi.encodeWithSelector(InvalidId.selector, (1)));
-        ercn.tokenURI(1);
+        erc6909.tokenURI(1);
     }
 }

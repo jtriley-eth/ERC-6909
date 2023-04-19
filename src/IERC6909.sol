@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-interface IERCN {
+interface IERC6909 {
     /// @notice The event emitted when a transfer occurs.
     /// @param sender The address of the sender.
     /// @param receiver The address of the receiver.

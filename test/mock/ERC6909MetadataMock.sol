@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/ERCNMetadata.sol";
+import "src/ERC6909Metadata.sol";
 
-contract ERCNMetadataMock is ERCNMetadata {
-    constructor() ERCNMetadata() {}
+contract ERC6909MetadataMock is ERC6909Metadata {
+    constructor() ERC6909Metadata() {}
 
     function mint(address owner, uint256 id, uint256 amount) public {
         balanceOf[owner][id] += amount;
