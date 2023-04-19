@@ -46,23 +46,23 @@ The following standard specifies a multi-token contract as a simplified alternat
 
 ## Motivation
 
-The ERC-1155 includes unnecessary features such as requiring recipient accounts with code to
-implement callbacks returning specific values and batch-calls in the specification. In addition, the
-single operator permission scheme grants unlimited allowance on every token ID in the contract.
+The ERC-1155 standard includes unnecessary features such as requiring recipient accounts with code
+to implement callbacks returning specific values and batch-calls in the specification. In addition,
+the single operator permission scheme grants unlimited allowance on every token ID in the contract.
 
 ## Rationale
 
 ### Granular Approvals
 
-While the "operator model" from ERC-1155 allows an account to set another account as an operator,
-giving full permissions to transfer any amount of any token id on behalf of the owner, this may not
-always be the desired permission scheme. The "allowance model" from ERC-20 allows an account to set
-an explicit amount of the token that another account can spend on the owner's behalf. This standard
-requires both be implemented, with the only modification being to the "allowance model" where the
-token id must be specified as well. This allows an account to grant specific approvals to specific
-token ids, infinite approvals to specific token ids, or infinite approvals to all token ids. If an
-account is set as an operator, the allowance SHOULD NOT be decreased when tokens are transferred on
-behalf of the owner.
+While the "operator model" from the ERC-1155 standard allows an account to set another account as an
+operator, giving full permissions to transfer any amount of any token id on behalf of the owner,
+this may not always be the desired permission scheme. The "allowance model" from ERC-20 allows an
+account to set an explicit amount of the token that another account can spend on the owner's behalf.
+This standard requires both be implemented, with the only modification being to the "allowance
+model" where the token id must be specified as well. This allows an account to grant specific
+approvals to specific token ids, infinite approvals to specific token ids, or infinite approvals to
+all token ids. If an account is set as an operator, the allowance SHOULD NOT be decreased when
+tokens are transferred on behalf of the owner.
 
 ### Removal of Batching
 
@@ -79,10 +79,10 @@ for more gas efficient methods by reducing external calls and additional checks.
 ### Removal of "Safe" Naming
 
 The `safeTransfer` and `safeTransferFrom` naming conventions are misleading, especially in the
-context of ERC-1155 and ERC-721, as they require external calls to receiver accounts with code,
-passing the execution flow to an arbitrary contract, provided the receiver contract returns a
-specific value. The combination of removing mandatory callbacks and removing the word "safe" from
-all method names improves the safety of the control flow by default.
+context of the ERC-1155 and ERC-721 standards, as they require external calls to receiver accounts
+with code, passing the execution flow to an arbitrary contract, provided the receiver contract
+returns a specific value. The combination of removing mandatory callbacks and removing the word
+"safe" from all method names improves the safety of the control flow by default.
 
 ## Specification
 
@@ -462,7 +462,7 @@ The metadata specification closely follows that of the ERC-721 JSON schema.
 ## Backwards Compatibility
 
 This is not backwards compatible with ERC-1155 as some methods are removed. however, wrappers can
-be implemented for ERC-20, ERC-721, and ERC-1155 tokens.
+be implemented for the ERC-20, ERC-721, and ERC-1155 standards.
 
 ## Reference Implementation
 
