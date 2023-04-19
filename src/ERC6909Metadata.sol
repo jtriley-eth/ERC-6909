@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/ERCN.sol";
+import "src/ERC6909.sol";
 
-contract ERCNMetadata is ERCN {
+contract ERC6909Metadata is ERC6909 {
     /// @dev Thrown when the id does not exist.
     /// @param id The id of the token.
     error InvalidId(uint256 id);
 
     /// @notice The name of the token.
-    string public name = "Example ERCN Metadata";
+    string public name = "Example ERC6909 Metadata";
 
     /// @notice The symbol of the token.
     string public symbol = "EEM";

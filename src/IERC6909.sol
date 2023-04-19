@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-interface IERCN {
+interface IERC6909 {
     /// @notice The event emitted when a transfer occurs.
     /// @param sender The address of the sender.
     /// @param receiver The address of the receiver.
@@ -70,7 +70,7 @@ interface IERCN {
     /// @param amount The amount of the token.
     function approve(address spender, uint256 id, uint256 amount) external;
 
-    /// @notice Sets or unsets a spender as an operator for the caller.
+    /// @notice Sets or removes a spender as an operator for the caller.
     /// @param spender The address of the spender.
     /// @param approved The approval status.
     function setOperator(address spender, bool approved) external;

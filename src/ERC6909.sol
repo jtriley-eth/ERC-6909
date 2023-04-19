@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/IERCN.sol";
+import "src/IERC6909.sol";
 import "src/IERC165.sol";
 
-contract ERCN is IERCN, IERC165 {
+contract ERC6909 is IERC6909, IERC165 {
     /// @dev Thrown when owner balance for id is insufficient.
     /// @param owner The address of the owner.
     /// @param id The id of the token.
@@ -80,6 +80,6 @@ contract ERCN is IERCN, IERC165 {
     /// @param interfaceId The interface identifier, as specified in ERC-165.
     /// @return supported True if the contract implements `interfaceId` and
     function supportsInterface(bytes4 interfaceId) public pure returns (bool supported) {
-        return interfaceId == type(IERCN).interfaceId || interfaceId == type(IERC165).interfaceId;
+        return interfaceId == type(IERC6909).interfaceId || interfaceId == type(IERC165).interfaceId;
     }
 }
