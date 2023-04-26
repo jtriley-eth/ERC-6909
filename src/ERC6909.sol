@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/IERC6909.sol";
-import "src/IERC165.sol";
+import "src/interfaces/IERC6909.sol";
 
-contract ERC6909 is IERC6909, IERC165 {
+contract ERC6909 is IERC6909 {
     /// @dev Thrown when owner balance for id is insufficient.
     /// @param owner The address of the owner.
     /// @param id The id of the token.
@@ -17,9 +16,6 @@ contract ERC6909 is IERC6909, IERC165 {
 
     /// @notice The total supply of each id.
     mapping(uint256 id => uint256 amount) public totalSupply;
-
-    /// @notice The number of decimals for each id.
-    mapping(uint256 id => uint8 amount) public decimals;
 
     /// @notice Owner balance of an id.
     mapping(address owner => mapping(uint256 id => uint256 amount)) public balanceOf;

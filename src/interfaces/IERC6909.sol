@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-interface IERC6909 {
+import "src/interfaces/IERC165.sol";
+
+interface IERC6909 is IERC165 {
     /// @notice The event emitted when a transfer occurs.
     /// @param sender The address of the sender.
     /// @param receiver The address of the receiver.
@@ -26,11 +28,6 @@ interface IERC6909 {
     /// @param id The id of the token.
     /// @return amount The total supply of the token.
     function totalSupply(uint256 id) external view returns (uint256 amount);
-
-    /// @notice The number of decimals for each id.
-    /// @param id The id of the token.
-    /// @return amount The number of decimals of the token.
-    function decimals(uint256 id) external view returns (uint8 amount);
 
     /// @notice Owner balance of an id.
     /// @param owner The address of the owner.

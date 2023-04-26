@@ -4,7 +4,7 @@ pragma solidity 0.8.19;
 import "forge-std/Test.sol";
 import "test/mock/ERC6909Mock.sol";
 
-contract erc6909Test is Test {
+contract ERC6909Test is Test {
     ERC6909Mock erc6909;
     address alice = vm.addr(1);
     address bob = vm.addr(2);
@@ -28,14 +28,6 @@ contract erc6909Test is Test {
 
     function testTotalSupply() public {
         assertEq(erc6909.totalSupply(tokenId), 1);
-    }
-
-    function testDecimals() public {
-        assertEq(erc6909.decimals(tokenId), 0);
-
-        erc6909.setDecimals(tokenId, 18);
-
-        assertEq(erc6909.decimals(tokenId), 18);
     }
 
     function testBalanceOf() public {
@@ -167,7 +159,7 @@ contract erc6909Test is Test {
     function testSupportsInterface() public {
         // type(Ierc6909).interfaceId
         // type(IERC165).interfaceId
-        assertTrue(erc6909.supportsInterface(0x8da179e8));
+        assertTrue(erc6909.supportsInterface(0xb2e69f8a));
         assertTrue(erc6909.supportsInterface(0x01ffc9a7));
     }
 }

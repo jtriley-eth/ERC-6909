@@ -11,4 +11,8 @@ contract ERC6909MetadataMock is ERC6909Metadata {
         totalSupply[id] += amount;
         emit Transfer(address(0), owner, id, amount);
     }
+
+    function setDecimals(uint256 id, uint8 amount) public {
+        decimals[id] = amount;
+    }
 }

@@ -6,6 +6,7 @@ import "test/mock/ERC6909MetadataMock.sol";
 
 contract ERC6909MetadataTest is Test {
     ERC6909MetadataMock erc6909;
+    uint256 tokenId = 1;
 
     error InvalidId(uint256 id);
 
@@ -29,5 +30,13 @@ contract ERC6909MetadataTest is Test {
     function testTokenURIInvalidId() public {
         vm.expectRevert(abi.encodeWithSelector(InvalidId.selector, (1)));
         erc6909.tokenURI(1);
+    }
+
+    function testDecimals() public {
+        assertEq(erc6909.decimals(tokenId), 0);
+
+        erc6909.setDecimals(tokenId, 18);
+
+        assertEq(erc6909.decimals(tokenId), 18);
     }
 }

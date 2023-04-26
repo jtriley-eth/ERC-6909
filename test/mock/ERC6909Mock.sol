@@ -11,8 +11,4 @@ contract ERC6909Mock is ERC6909 {
         totalSupply[id] += amount;
         emit Transfer(address(0), owner, id, amount);
     }
-
-    function setDecimals(uint256 id, uint8 amount) public {
-        decimals[id] = amount;
-    }
 }
