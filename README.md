@@ -3,7 +3,7 @@
 ## Token ID Visualization
 
 ```mermaid
-flowchart LR
+flowchart TD
     %% -- ERC6909 --
     user --> id0{Token ID 0}
     id0 --> bn([balanceOf])
