@@ -1,4 +1,28 @@
-# The "Pretty Obvious If You Think About It" Multi-Token Standard
+# The "Pretty Obvious If You Think About It" Multi-Token EIP
+
+## Token ID Visualization
+
+```mermaid
+flowchart LR
+    %% -- ERC6909 --
+    user --> id0{Token ID 0}
+    id0 --> bn([balanceOf])
+    id0 --> an([allowance])
+    id0 --> tsn([totalSupply])
+    id0 --> dn([decimals])
+
+    user --> idn1{Token ID 1}
+    idn1 --> balanceOf1([balanceOf])
+    idn1 --> allowance1([allowance])
+    idn1 --> total_supply1([totalSupply])
+    idn1 --> decimals1([decimals])
+
+    user --> idn2{Token ID n}
+    idn2 --> balanceOf([balanceOf])
+    idn2 --> allowance([allowance])
+    idn2 --> total_supply([totalSupply])
+    idn2 --> decimals([decimals])
+```
 
 ## Links
 
