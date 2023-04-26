@@ -1,5 +1,12 @@
 // SPDX-License-Identifier: MIT
 
+/// @title ERC6909 Multi-Token
+/// @author jtriley.eth
+
+//! > NOTE: At the time of writing, Fe does not support `bytes4`, therefore compliance with a
+//! > required dependency ERC (165), is not possible, as `bytes4` is a required method argument.
+//! > A temporary workaround is implemented by using the `Array<u8, 4>` type as the argument.
+
 /// @notice The event emitted when a transfer occurs.
 /// @param sender The address of the sender.
 /// @param receiver The address of the receiver.
@@ -43,33 +50,50 @@ struct Approval {
 }
 
 contract ERCN {
-    // Storage Layout
+    // --- Storage Layout ---
     totalSupply: Map<u256, u256>
-    decimals: Map<u256, u8>
     balanceOf: Map<address, Map<u256, u256>>
     allowance: Map<address, Map<address, Map<u256, u256>>>
     isOperator: Map<address, Map<address, bool>>
 
+    // --- External Interface ---
+
+    /// @notice The total supply of each id.
+    /// @param id The id of the token.
+    /// @return amount The total supply of the token.
     pub fn totalSupply(self, id: u256) -> u256 {
         return self.totalSupply[id]
     }
 
-    pub fn decimals(self, id: u256) -> u8 {
-        return self.decimals[id]
-    }
-
+    /// @notice Owner balance of an id.
+    /// @param owner The address of the owner.
+    /// @param id The id of the token.
+    /// @return amount The balance of the token.
     pub fn balanceOf(self, owner: address, id: u256) -> u256 {
         return self.balanceOf[owner][id]
     }
 
+    /// @notice Spender allowance of an id.
+    /// @param owner The address of the owner.
+    /// @param spender The address of the spender.
+    /// @param id The id of the token.
+    /// @return amount The allowance of the token.
     pub fn allowance(self, owner: address, spender: address, id: u256) -> u256 {
         return self.allowance[owner][spender][id]
     }
 
+    /// @notice Checks if a spender is approved by an owner as an operator
+    /// @param owner The address of the owner.
+    /// @param spender The address of the spender.
+    /// @return approved The approval status.
     pub fn isOperator(self, owner: address, operator: address) -> bool {
         return self.isOperator[owner][operator]
     }
 
+    /// @notice Transfers an amount of an id from the caller to a receiver.
+    /// @param receiver The address of the receiver.
+    /// @param id The id of the token.
+    /// @param amount The amount of the token.
     pub fn transfer(
         mut self,
         mut ctx: Context,
@@ -84,6 +108,11 @@ contract ERCN {
         return
     }
 
+    /// @notice Transfers an amount of an id from a sender to a receiver.
+    /// @param sender The address of the sender.
+    /// @param receiver The address of the receiver.
+    /// @param id The id of the token.
+    /// @param amount The amount of the token.
     pub fn transferFrom(
         mut self,
         mut ctx: Context,
@@ -103,6 +132,10 @@ contract ERCN {
         return
     }
 
+    /// @notice Approves an amount of an id to a spender.
+    /// @param spender The address of the spender.
+    /// @param id The id of the token.
+    /// @param amount The amount of the token.
     pub fn approve(
         mut self,
         mut ctx: Context,
@@ -115,6 +148,9 @@ contract ERCN {
         return
     }
 
+    /// @notice Sets or removes a spender as an operator for the caller.
+    /// @param spender The address of the spender.
+    /// @param approved The approval status.
     pub fn setOperator(
         mut self,
         mut ctx: Context,
@@ -126,6 +162,11 @@ contract ERCN {
         return
     }
 
+    /// @notice Checks if a contract implements an interface.
+    /// @dev NOT ERC-165 COMPLIANT UNTIL FE IMPLEMENTS `bytes4` TYPE.
+    /// @param interfaceId The interface identifier, as specified in ERC-165.
+    /// @return supported True if the contract implements `interfaceId` and
+    /// `interfaceId` is not 0xffffffff, false otherwise.
     pub fn supportsInterface(interfaceId: Array<u8, 4>) -> bool {
         let numericInterfaceId: u32 = interfaceId[0] | (interfaceId[1] << 8) | (interfaceId[2] << 16) | (interfaceId[3] << 24)
         return numericInterfaceId == 0x01ffc9a7 or numericInterfaceId == 0x8da179e8
