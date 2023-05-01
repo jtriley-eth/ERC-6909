@@ -1,4 +1,4 @@
-# The "Pretty Obvious If You Think About It" Multi-Token EIP
+# ERC-6909 Multi Token
 
 ## Token ID Visualization
 
