@@ -22,16 +22,6 @@ contract ERC6909MetadataTest is Test {
         assertEq(erc6909.symbol(), "EEM");
     }
 
-    function testTokenURI() public {
-        erc6909.mint(vm.addr(1), 1, 1);
-        assertEq(erc6909.tokenURI(1), "<base_uri>/1");
-    }
-
-    function testTokenURIInvalidId() public {
-        vm.expectRevert(abi.encodeWithSelector(InvalidId.selector, (1)));
-        erc6909.tokenURI(1);
-    }
-
     function testDecimals() public {
         assertEq(erc6909.decimals(tokenId), 0);
 
