@@ -4,16 +4,6 @@ pragma solidity ^0.8.19;
 import "src/interfaces/IERC6909.sol";
 
 contract ERC6909 is IERC6909 {
-    /// @dev Thrown when owner balance for id is insufficient.
-    /// @param owner The address of the owner.
-    /// @param id The id of the token.
-    error InsufficientBalance(address owner, uint256 id);
-
-    /// @dev Thrown when spender allowance for id is insufficient.
-    /// @param spender The address of the spender.
-    /// @param id The id of the token.
-    error InsufficientPermission(address spender, uint256 id);
-
     /// @notice The total supply of each id.
     mapping(uint256 id => uint256 amount) public totalSupply;
 
@@ -31,9 +21,14 @@ contract ERC6909 is IERC6909 {
     /// @param id The id of the token.
     /// @param amount The amount of the token.
     function transfer(address receiver, uint256 id, uint256 amount) public {
-        if (balanceOf[msg.sender][id] < amount) revert InsufficientBalance(msg.sender, id);
         balanceOf[msg.sender][id] -= amount;
-        balanceOf[receiver][id] += amount;
+        
+        // Cannot overflow because the sum of all user
+        // balances can't exceed the max uint256 value.
+        unchecked {
+            balanceOf[receiver][id] += amount;
+        }
+
         emit Transfer(msg.sender, receiver, id, amount);
     }
 
@@ -44,14 +39,17 @@ contract ERC6909 is IERC6909 {
     /// @param amount The amount of the token.
     function transferFrom(address sender, address receiver, uint256 id, uint256 amount) public {
         if (sender != msg.sender && !isOperator[sender][msg.sender]) {
-            if (allowance[sender][msg.sender][id] < amount) {
-                revert InsufficientPermission(msg.sender, id);
-            }
             allowance[sender][msg.sender][id] -= amount;
         }
-        if (balanceOf[sender][id] < amount) revert InsufficientBalance(sender, id);
+        
         balanceOf[sender][id] -= amount;
-        balanceOf[receiver][id] += amount;
+
+        // Cannot overflow because the sum of all user
+        // balances can't exceed the max uint256 value.
+        unchecked {
+            balanceOf[receiver][id] += amount;
+        }
+        
         emit Transfer(sender, receiver, id, amount);
     }
 
