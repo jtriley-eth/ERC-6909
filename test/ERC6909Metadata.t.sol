@@ -29,4 +29,12 @@ contract ERC6909MetadataTest is Test {
 
         assertEq(erc6909.decimals(tokenId), 18);
     }
+
+    function testFuzzDecimals(uint256 id, uint8 decimals) public {
+        assertEq(erc6909.decimals(id), 0);
+
+        erc6909.setDecimals(id, decimals);
+
+        assertEq(erc6909.decimals(id), decimals);
+    }
 }

@@ -24,14 +24,17 @@ contract ERC6909Test is Test {
         erc6909 = new ERC6909Mock();
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Success Cases
+
     function testTotalSupply() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.totalSupply(tokenId), 1);
     }
 
     function testBalanceOf() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
@@ -39,7 +42,7 @@ contract ERC6909Test is Test {
 
     function testAllowance() public {
         assertEq(erc6909.allowance(alice, bob, tokenId), 0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Approval(alice, bob, tokenId, 1);
 
         vm.prank(alice);
@@ -49,11 +52,11 @@ contract ERC6909Test is Test {
     }
 
     function testTransfer() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(alice);
@@ -64,7 +67,7 @@ contract ERC6909Test is Test {
     }
 
     function testTransferFrom() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
@@ -72,7 +75,7 @@ contract ERC6909Test is Test {
         vm.prank(alice);
         erc6909.approve(bob, tokenId, 1);
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(bob);
@@ -84,11 +87,11 @@ contract ERC6909Test is Test {
     }
 
     function testTransferFromCallerIsSender() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(alice);
@@ -99,7 +102,7 @@ contract ERC6909Test is Test {
     }
 
     function testTransferFromCallerIsOperator() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
@@ -107,7 +110,7 @@ contract ERC6909Test is Test {
         vm.prank(alice);
         erc6909.setOperator(bob, true);
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(alice, bob, tokenId, 1);
         vm.prank(bob);
         erc6909.transferFrom(alice, bob, tokenId, 1);
@@ -119,7 +122,7 @@ contract ERC6909Test is Test {
 
     function testApprove() public {
         assertEq(erc6909.allowance(alice, bob, tokenId), 0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Approval(alice, bob, tokenId, 1);
 
         vm.prank(alice);
@@ -130,7 +133,7 @@ contract ERC6909Test is Test {
 
     function testSetOperator() public {
         assertFalse(erc6909.isOperator(alice, bob));
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit OperatorSet(alice, bob, true);
 
         vm.prank(alice);
@@ -139,8 +142,52 @@ contract ERC6909Test is Test {
         assertTrue(erc6909.isOperator(alice, bob));
     }
 
+    function testSupportsInterface() public {
+        // type(Ierc6909).interfaceId
+        // type(IERC165).interfaceId
+        assertTrue(erc6909.supportsInterface(0xb2e69f8a));
+        assertTrue(erc6909.supportsInterface(0x01ffc9a7));
+    }
+
+    function testTransferZeroValue() public {
+        vm.expectEmit(true, true, true, true, address(erc6909));
+        emit Transfer(alice, bob, tokenId, 0);
+
+        vm.prank(alice);
+        erc6909.transfer(bob, tokenId, 0);
+
+        assertEq(erc6909.balanceOf(alice, tokenId), 0);
+        assertEq(erc6909.balanceOf(bob, tokenId), 0);
+    }
+
+    function testTransferFromZeroValue() public {
+        vm.expectEmit(true, true, true, true, address(erc6909));
+        emit Transfer(alice, bob, tokenId, 0);
+
+        vm.prank(bob);
+        erc6909.transferFrom(alice, bob, tokenId, 0);
+
+        assertEq(erc6909.balanceOf(alice, tokenId), 0);
+        assertEq(erc6909.balanceOf(bob, tokenId), 0);
+    }
+
+    function testSelfTransfer() public {
+        erc6909.mint(alice, tokenId, 1);
+
+        vm.expectEmit(true, true, true, true, address(erc6909));
+        emit Transfer(alice, alice, tokenId, 1);
+
+        vm.prank(alice);
+        erc6909.transfer(alice, tokenId, 1);
+
+        assertEq(erc6909.balanceOf(alice, tokenId), 1);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Failure Cases
+
     function testTransferInsufficientBalance() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
@@ -151,7 +198,7 @@ contract ERC6909Test is Test {
     }
 
     function testTransferFromInsufficientBalance() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
@@ -162,7 +209,7 @@ contract ERC6909Test is Test {
     }
 
     function testTransferFromInsufficientPermission() public {
-        erc6909.mint(alice, 1, 1);
+        erc6909.mint(alice, tokenId, 1);
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
@@ -173,12 +220,8 @@ contract ERC6909Test is Test {
         erc6909.transferFrom(alice, bob, tokenId, 1);
     }
 
-    function testSupportsInterface() public {
-        // type(Ierc6909).interfaceId
-        // type(IERC165).interfaceId
-        assertTrue(erc6909.supportsInterface(0xb2e69f8a));
-        assertTrue(erc6909.supportsInterface(0x01ffc9a7));
-    }
+    // ---------------------------------------------------------------------------------------------
+    // Fuzz Tests
 
     function testFuzzTotalSupply(uint256 id, uint256 value) public {
         erc6909.mint(alice, id, value);
@@ -194,7 +237,7 @@ contract ERC6909Test is Test {
 
     function testFuzzAllowance(address owner, address spender, uint256 id, uint256 value) public {
         assertEq(erc6909.allowance(owner, spender, id), 0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Approval(owner, spender, id, value);
 
         vm.prank(owner);
@@ -213,7 +256,7 @@ contract ERC6909Test is Test {
             assertEq(erc6909.balanceOf(sender, id), value);
             assertEq(erc6909.balanceOf(receiver, id), value);
         }
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(sender);
@@ -243,7 +286,7 @@ contract ERC6909Test is Test {
         assertEq(erc6909.allowance(sender, spender, id), 0);
         vm.prank(sender);
         erc6909.approve(spender, id, value);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(spender);
@@ -273,7 +316,7 @@ contract ERC6909Test is Test {
             assertEq(erc6909.balanceOf(sender, id), value);
             assertEq(erc6909.balanceOf(receiver, id), value);
         }
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(sender);
@@ -307,7 +350,7 @@ contract ERC6909Test is Test {
         assertFalse(erc6909.isOperator(sender, spender));
         vm.prank(sender);
         erc6909.setOperator(spender, true);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(spender);
@@ -325,7 +368,7 @@ contract ERC6909Test is Test {
 
     function testFuzzApprove(address owner, address spender, uint256 id, uint256 value) public {
         assertEq(erc6909.allowance(owner, spender, id), 0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit Approval(owner, spender, id, value);
 
         vm.prank(owner);
@@ -336,7 +379,7 @@ contract ERC6909Test is Test {
 
     function testFuzzSetOperator(address owner, address spender, bool approved) public {
         assertFalse(erc6909.isOperator(owner, spender));
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true, address(erc6909));
         emit OperatorSet(owner, spender, approved);
 
         vm.prank(owner);
