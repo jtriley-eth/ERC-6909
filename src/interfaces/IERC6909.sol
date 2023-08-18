@@ -52,23 +52,23 @@ interface IERC6909 is IERC165 {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function transfer(address receiver, uint256 id, uint256 amount) external;
+    function transfer(address receiver, uint256 id, uint256 amount) external returns (bool);
 
     /// @notice Transfers an amount of an id from a sender to a receiver.
     /// @param sender The address of the sender.
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function transferFrom(address sender, address receiver, uint256 id, uint256 amount) external;
+    function transferFrom(address sender, address receiver, uint256 id, uint256 amount) external returns (bool);
 
     /// @notice Approves an amount of an id to a spender.
     /// @param spender The address of the spender.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function approve(address spender, uint256 id, uint256 amount) external;
+    function approve(address spender, uint256 id, uint256 amount) external returns (bool);
 
     /// @notice Sets or removes a spender as an operator for the caller.
     /// @param spender The address of the spender.
     /// @param approved The approval status.
-    function setOperator(address spender, bool approved) external;
+    function setOperator(address spender, bool approved) external returns (bool);
 }

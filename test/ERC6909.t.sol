@@ -60,8 +60,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(alice);
-        erc6909.transfer(bob, tokenId, 1);
-
+        assertTrue(erc6909.transfer(bob, tokenId, 1));
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 1);
     }
@@ -79,8 +78,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(bob);
-        erc6909.transferFrom(alice, bob, tokenId, 1);
-
+        assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 1);
         assertEq(erc6909.allowance(alice, bob, tokenId), 0);
@@ -115,8 +113,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(alice);
-        erc6909.transferFrom(alice, bob, tokenId, 1);
-
+        assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 1);
     }
@@ -132,9 +129,9 @@ contract ERC6909Test is Test {
 
         vm.expectEmit(true, true, true, true, address(erc6909));
         emit Transfer(alice, bob, tokenId, 1);
-        vm.prank(bob);
-        erc6909.transferFrom(alice, bob, tokenId, 1);
 
+        vm.prank(bob);
+        assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 1);
         assertTrue(erc6909.isOperator(alice, bob));
@@ -174,8 +171,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, bob, tokenId, 0);
 
         vm.prank(alice);
-        erc6909.transfer(bob, tokenId, 0);
-
+        assertTrue(erc6909.transfer(bob, tokenId, 0));
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
     }
@@ -185,8 +181,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, bob, tokenId, 0);
 
         vm.prank(bob);
-        erc6909.transferFrom(alice, bob, tokenId, 0);
-
+        assertTrue(erc6909.transferFrom(alice, bob, tokenId, 0));
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
     }
@@ -232,8 +227,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, bob, tokenId, 1);
 
         vm.prank(bob);
-        erc6909.transferFrom(alice, bob, tokenId, 1);
-
+        assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
         assertEq(erc6909.allowance(alice, bob, tokenId), 1);
         assertEq(erc6909.balanceOf(alice, tokenId), 0);
         assertEq(erc6909.balanceOf(bob, tokenId), 1);
@@ -246,7 +240,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, alice, tokenId, 1);
 
         vm.prank(alice);
-        erc6909.transfer(alice, tokenId, 1);
+        assertTrue(erc6909.transfer(alice, tokenId, 1));
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
     }
@@ -258,8 +252,7 @@ contract ERC6909Test is Test {
         emit Transfer(alice, alice, tokenId, 1);
 
         vm.prank(alice);
-        erc6909.transferFrom(alice, alice, tokenId, 1);
-
+        assertTrue(erc6909.transferFrom(alice, alice, tokenId, 1));
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
     }
 
@@ -360,7 +353,7 @@ contract ERC6909Test is Test {
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(sender);
-        erc6909.transfer(receiver, id, value);
+        assertTrue(erc6909.transfer(receiver, id, value));
 
         if (sender != receiver) {
             assertEq(erc6909.balanceOf(sender, id), 0);
@@ -390,7 +383,7 @@ contract ERC6909Test is Test {
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(spender);
-        erc6909.transferFrom(sender, receiver, id, value);
+        assertTrue(erc6909.transferFrom(sender, receiver, id, value));
 
         if (sender != receiver) {
             assertEq(erc6909.balanceOf(sender, id), 0);
@@ -420,7 +413,7 @@ contract ERC6909Test is Test {
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(sender);
-        erc6909.transferFrom(sender, receiver, id, value);
+        assertTrue(erc6909.transferFrom(sender, receiver, id, value));
 
         if (sender != receiver) {
             assertEq(erc6909.balanceOf(sender, id), 0);
@@ -454,7 +447,7 @@ contract ERC6909Test is Test {
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(spender);
-        erc6909.transferFrom(sender, receiver, id, value);
+        assertTrue(erc6909.transferFrom(sender, receiver, id, value));
 
         if (sender != receiver) {
             assertEq(erc6909.balanceOf(sender, id), 0);
@@ -508,9 +501,9 @@ contract ERC6909Test is Test {
         emit Transfer(sender, receiver, id, value);
 
         vm.prank(spender);
-        erc6909.transferFrom(sender, receiver, id, value);
-
+        assertTrue(erc6909.transferFrom(sender, receiver, id, value));
         assertEq(erc6909.allowance(sender, spender, id), value);
+
         if (sender != receiver) {
             assertEq(erc6909.balanceOf(sender, id), 0);
             assertEq(erc6909.balanceOf(receiver, id), value);
