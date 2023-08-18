@@ -86,6 +86,26 @@ contract ERC6909Test is Test {
         assertEq(erc6909.allowance(alice, bob, tokenId), 0);
     }
 
+    function testTransferFromInfiniteAllowance() public {
+        erc6909.mint(alice, tokenId, 1);
+
+        assertEq(erc6909.balanceOf(alice, tokenId), 1);
+        assertEq(erc6909.balanceOf(bob, tokenId), 0);
+        assertEq(erc6909.allowance(alice, bob, tokenId), 0);
+        vm.prank(alice);
+        erc6909.approve(bob, tokenId, type(uint256).max);
+
+        vm.expectEmit(true, true, true, true, address(erc6909));
+        emit Transfer(alice, bob, tokenId, 1);
+
+        vm.prank(bob);
+        erc6909.transferFrom(alice, bob, tokenId, 1);
+
+        assertEq(erc6909.balanceOf(alice, tokenId), 0);
+        assertEq(erc6909.balanceOf(bob, tokenId), 1);
+        assertEq(erc6909.allowance(alice, bob, tokenId), type(uint256).max);
+    }
+
     function testTransferFromCallerIsSender() public {
         erc6909.mint(alice, tokenId, 1);
 
@@ -379,7 +399,7 @@ contract ERC6909Test is Test {
             assertEq(erc6909.balanceOf(sender, id), value);
             assertEq(erc6909.balanceOf(receiver, id), value);
         }
-        if (sender != spender) {
+        if (sender != spender && value != type(uint256).max) {
             assertEq(erc6909.allowance(sender, spender, id), 0);
         } else {
             assertEq(erc6909.allowance(sender, spender, id), value);

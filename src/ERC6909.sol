@@ -44,10 +44,11 @@ contract ERC6909 is IERC6909 {
     /// @param amount The amount of the token.
     function transferFrom(address sender, address receiver, uint256 id, uint256 amount) public {
         if (sender != msg.sender && !isOperator[sender][msg.sender]) {
-            if (allowance[sender][msg.sender][id] < amount) {
-                revert InsufficientPermission(msg.sender, id);
+            uint256 senderAllowance = allowance[sender][msg.sender][id];
+            if (senderAllowance < amount) revert InsufficientPermission(msg.sender, id);
+            if (senderAllowance != type(uint256).max) {
+                allowance[sender][msg.sender][id] = senderAllowance - amount;
             }
-            allowance[sender][msg.sender][id] -= amount;
         }
         if (balanceOf[sender][id] < amount) revert InsufficientBalance(sender, id);
         balanceOf[sender][id] -= amount;
