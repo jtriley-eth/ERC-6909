@@ -488,7 +488,13 @@ contract ERC6909Test is Test {
         assertEq(erc6909.isOperator(owner, spender), approved);
     }
 
-    function testFuzzOperatorDoesNotDeductAllowance(address spender, address sender, address receiver, uint256 id, uint256 value) public {
+    function testFuzzOperatorDoesNotDeductAllowance(
+        address spender,
+        address sender,
+        address receiver,
+        uint256 id,
+        uint256 value
+    ) public {
         erc6909.mint(sender, id, value);
         vm.prank(sender);
         erc6909.approve(spender, id, value);
