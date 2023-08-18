@@ -3,6 +3,16 @@
 # @title ERC6909 Multi-Token
 # @author jtriley.eth
 
+# ------------------------------------------------------------------------------
+# Everything between these lines is unique to this mock. Everything else is copy
+# pasta'd from `alt/ERC6909.vy`.
+@external
+def mint(owner: address, id: uint256, amount: uint256):
+    self.balanceOf[owner][id] += amount
+    self.totalSupply[id] += amount
+    log Transfer(empty(address), owner, id, amount)
+# ------------------------------------------------------------------------------
+
 # @notice The event emitted when a transfer occurs.
 # @param sender The address of the sender.
 # @param receiver The address of the receiver.
