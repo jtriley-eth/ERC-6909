@@ -5,14 +5,10 @@ import "src/interfaces/IERC6909.sol";
 
 contract ERC6909 is IERC6909 {
     /// @dev Thrown when owner balance for id is insufficient.
-    /// @param owner The address of the owner.
-    /// @param id The id of the token.
-    error InsufficientBalance(address owner, uint256 id);
+    error InsufficientBalance();
 
     /// @dev Thrown when spender allowance for id is insufficient.
-    /// @param spender The address of the spender.
-    /// @param id The id of the token.
-    error InsufficientPermission(address spender, uint256 id);
+    error InsufficientPermission();
 
     /// @notice The total supply of each id.
     mapping(uint256 id => uint256 amount) public totalSupply;
@@ -31,7 +27,7 @@ contract ERC6909 is IERC6909 {
     /// @param id The id of the token.
     /// @param amount The amount of the token.
     function transfer(address receiver, uint256 id, uint256 amount) public returns (bool) {
-        if (balanceOf[msg.sender][id] < amount) revert InsufficientBalance(msg.sender, id);
+        if (balanceOf[msg.sender][id] < amount) revert InsufficientBalance();
         balanceOf[msg.sender][id] -= amount;
         balanceOf[receiver][id] += amount;
         emit Transfer(msg.sender, receiver, id, amount);
@@ -46,12 +42,12 @@ contract ERC6909 is IERC6909 {
     function transferFrom(address sender, address receiver, uint256 id, uint256 amount) public returns (bool) {
         if (sender != msg.sender && !isOperator[sender][msg.sender]) {
             uint256 senderAllowance = allowance[sender][msg.sender][id];
-            if (senderAllowance < amount) revert InsufficientPermission(msg.sender, id);
+            if (senderAllowance < amount) revert InsufficientPermission();
             if (senderAllowance != type(uint256).max) {
                 allowance[sender][msg.sender][id] = senderAllowance - amount;
             }
         }
-        if (balanceOf[sender][id] < amount) revert InsufficientBalance(sender, id);
+        if (balanceOf[sender][id] < amount) revert InsufficientBalance();
         balanceOf[sender][id] -= amount;
         balanceOf[receiver][id] += amount;
         emit Transfer(sender, receiver, id, amount);

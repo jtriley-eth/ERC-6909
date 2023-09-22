@@ -11,8 +11,8 @@ contract ERC6909Test is Test {
     uint256 tokenId = 1;
     uint256 amount = 100;
 
-    error InsufficientBalance(address owner, uint256 id);
-    error InsufficientPermission(address spender, uint256 id);
+    error InsufficientBalance();
+    error InsufficientPermission();
 
     event Transfer(address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
 
@@ -284,7 +284,7 @@ contract ERC6909Test is Test {
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
-        vm.expectRevert(abi.encodeWithSelector(InsufficientBalance.selector, alice, tokenId));
+        vm.expectRevert(InsufficientBalance.selector);
 
         vm.prank(alice);
         erc6909.transfer(bob, tokenId, 2);
@@ -295,7 +295,7 @@ contract ERC6909Test is Test {
 
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
-        vm.expectRevert(abi.encodeWithSelector(InsufficientBalance.selector, alice, tokenId));
+        vm.expectRevert(InsufficientBalance.selector);
 
         vm.prank(alice);
         erc6909.transferFrom(alice, bob, tokenId, 2);
@@ -307,7 +307,7 @@ contract ERC6909Test is Test {
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
         assertEq(erc6909.allowance(alice, bob, tokenId), 0);
-        vm.expectRevert(abi.encodeWithSelector(InsufficientPermission.selector, bob, tokenId));
+        vm.expectRevert(InsufficientPermission.selector);
 
         vm.prank(bob);
         erc6909.transferFrom(alice, bob, tokenId, 1);
@@ -517,7 +517,7 @@ contract ERC6909Test is Test {
         value = bound(value, 1, type(uint256).max);
         assertEq(erc6909.balanceOf(sender, id), 0);
         assertEq(erc6909.balanceOf(receiver, id), 0);
-        vm.expectRevert(abi.encodeWithSelector(InsufficientBalance.selector, sender, id));
+        vm.expectRevert(InsufficientBalance.selector);
 
         vm.prank(sender);
         erc6909.transfer(receiver, id, value);
@@ -529,7 +529,7 @@ contract ERC6909Test is Test {
         value = bound(value, 1, type(uint256).max);
         assertEq(erc6909.balanceOf(sender, id), 0);
         assertEq(erc6909.balanceOf(receiver, id), 0);
-        vm.expectRevert(abi.encodeWithSelector(InsufficientBalance.selector, sender, id));
+        vm.expectRevert(InsufficientBalance.selector);
 
         vm.prank(sender);
         erc6909.transferFrom(sender, receiver, id, value);
@@ -547,7 +547,7 @@ contract ERC6909Test is Test {
         assertEq(erc6909.balanceOf(sender, id), 0);
         assertEq(erc6909.balanceOf(receiver, id), 0);
         assertEq(erc6909.allowance(sender, spender, id), 0);
-        vm.expectRevert(abi.encodeWithSelector(InsufficientPermission.selector, spender, id));
+        vm.expectRevert(InsufficientPermission.selector);
 
         vm.prank(spender);
         erc6909.transferFrom(sender, receiver, id, value);
