@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
-import "test/mock/ERC6909MetadataMock.sol";
+import "./mock/ERC6909MetadataMock.sol";
 
 contract ERC6909MetadataTest is Test {
     ERC6909MetadataMock erc6909;

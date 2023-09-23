@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/ERC6909.sol";
+import "../../src/ERC6909.sol";
 
 contract ERC6909Mock is ERC6909 {
     constructor() ERC6909() {}

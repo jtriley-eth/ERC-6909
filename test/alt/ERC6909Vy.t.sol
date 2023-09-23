@@ -2,8 +2,8 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
-import "test/mock/ERC6909Mock.sol";
-import "test/mock/ERC6909MockVy.sol";
+import "../mock/ERC6909Mock.sol";
+import "../mock/ERC6909MockVy.sol";
 
 contract ERC6909VyTest is Test {
     ERC6909Mock erc6909;

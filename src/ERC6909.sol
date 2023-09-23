@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/interfaces/IERC6909.sol";
+import "./interfaces/IERC6909.sol";
 
 contract ERC6909 is IERC6909 {
     /// @dev Thrown when owner balance for id is insufficient.

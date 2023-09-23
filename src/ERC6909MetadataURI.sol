@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/ERC6909Metadata.sol";
-import "src/interfaces/IERC6909MetadataURI.sol";
+import "./ERC6909Metadata.sol";
+import "./interfaces/IERC6909MetadataURI.sol";
 
 contract ERC6909MetadataURI is ERC6909Metadata, IERC6909MetadataURI {
     /// @dev Thrown when the id does not exist.

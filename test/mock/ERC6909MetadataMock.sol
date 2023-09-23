@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/ERC6909Metadata.sol";
+import "../../src/ERC6909Metadata.sol";
 
 contract ERC6909MetadataMock is ERC6909Metadata {
     constructor() ERC6909Metadata() {}

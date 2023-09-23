@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/interfaces/IERC165.sol";
+import "./IERC165.sol";
 
 interface IERC6909 is IERC165 {
     /// @notice The event emitted when a transfer occurs.

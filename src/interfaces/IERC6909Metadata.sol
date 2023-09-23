@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "src/interfaces/IERC6909.sol";
+import "./IERC6909.sol";
 
 interface IERC6909Metadata is IERC6909 {
     function name() external view returns (string memory);
