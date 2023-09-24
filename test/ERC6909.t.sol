@@ -14,7 +14,7 @@ contract ERC6909Test is Test {
     error InsufficientBalance();
     error InsufficientPermission();
 
-    event Transfer(address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
+    event Transfer(address indexed caller, address indexed sender, address indexed receiver, uint256 id, uint256 amount);
 
     event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
@@ -57,7 +57,7 @@ contract ERC6909Test is Test {
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 1);
+        emit Transfer(alice, alice, bob, tokenId, 1);
 
         vm.prank(alice);
         assertTrue(erc6909.transfer(bob, tokenId, 1));
@@ -75,7 +75,7 @@ contract ERC6909Test is Test {
         erc6909.approve(bob, tokenId, 1);
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 1);
+        emit Transfer(bob, alice, bob, tokenId, 1);
 
         vm.prank(bob);
         assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
@@ -94,7 +94,7 @@ contract ERC6909Test is Test {
         erc6909.approve(bob, tokenId, type(uint256).max);
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 1);
+        emit Transfer(bob, alice, bob, tokenId, 1);
 
         vm.prank(bob);
         erc6909.transferFrom(alice, bob, tokenId, 1);
@@ -110,7 +110,7 @@ contract ERC6909Test is Test {
         assertEq(erc6909.balanceOf(alice, tokenId), 1);
         assertEq(erc6909.balanceOf(bob, tokenId), 0);
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 1);
+        emit Transfer(alice, alice, bob, tokenId, 1);
 
         vm.prank(alice);
         assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
@@ -128,7 +128,7 @@ contract ERC6909Test is Test {
         erc6909.setOperator(bob, true);
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 1);
+        emit Transfer(bob, alice, bob, tokenId, 1);
 
         vm.prank(bob);
         assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
@@ -168,7 +168,7 @@ contract ERC6909Test is Test {
 
     function testTransferZeroValue() public {
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 0);
+        emit Transfer(alice, alice, bob, tokenId, 0);
 
         vm.prank(alice);
         assertTrue(erc6909.transfer(bob, tokenId, 0));
@@ -178,7 +178,7 @@ contract ERC6909Test is Test {
 
     function testTransferFromZeroValue() public {
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 0);
+        emit Transfer(bob, alice, bob, tokenId, 0);
 
         vm.prank(bob);
         assertTrue(erc6909.transferFrom(alice, bob, tokenId, 0));
@@ -224,7 +224,7 @@ contract ERC6909Test is Test {
         assertTrue(erc6909.isOperator(alice, bob));
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, bob, tokenId, 1);
+        emit Transfer(bob, alice, bob, tokenId, 1);
 
         vm.prank(bob);
         assertTrue(erc6909.transferFrom(alice, bob, tokenId, 1));
@@ -237,7 +237,7 @@ contract ERC6909Test is Test {
         erc6909.mint(alice, tokenId, 1);
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, alice, tokenId, 1);
+        emit Transfer(alice, alice, alice, tokenId, 1);
 
         vm.prank(alice);
         assertTrue(erc6909.transfer(alice, tokenId, 1));
@@ -249,7 +249,7 @@ contract ERC6909Test is Test {
         erc6909.mint(alice, tokenId, 1);
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(alice, alice, tokenId, 1);
+        emit Transfer(alice, alice, alice, tokenId, 1);
 
         vm.prank(alice);
         assertTrue(erc6909.transferFrom(alice, alice, tokenId, 1));
@@ -350,7 +350,7 @@ contract ERC6909Test is Test {
             assertEq(erc6909.balanceOf(receiver, id), value);
         }
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(sender, receiver, id, value);
+        emit Transfer(sender, sender, receiver, id, value);
 
         vm.prank(sender);
         assertTrue(erc6909.transfer(receiver, id, value));
@@ -380,7 +380,7 @@ contract ERC6909Test is Test {
         vm.prank(sender);
         erc6909.approve(spender, id, value);
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(sender, receiver, id, value);
+        emit Transfer(spender, sender, receiver, id, value);
 
         vm.prank(spender);
         assertTrue(erc6909.transferFrom(sender, receiver, id, value));
@@ -410,7 +410,7 @@ contract ERC6909Test is Test {
             assertEq(erc6909.balanceOf(receiver, id), value);
         }
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(sender, receiver, id, value);
+        emit Transfer(sender, sender, receiver, id, value);
 
         vm.prank(sender);
         assertTrue(erc6909.transferFrom(sender, receiver, id, value));
@@ -444,7 +444,7 @@ contract ERC6909Test is Test {
         vm.prank(sender);
         erc6909.setOperator(spender, true);
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(sender, receiver, id, value);
+        emit Transfer(spender, sender, receiver, id, value);
 
         vm.prank(spender);
         assertTrue(erc6909.transferFrom(sender, receiver, id, value));
@@ -498,7 +498,7 @@ contract ERC6909Test is Test {
         assertTrue(erc6909.isOperator(sender, spender));
 
         vm.expectEmit(true, true, true, true, address(erc6909));
-        emit Transfer(sender, receiver, id, value);
+        emit Transfer(spender, sender, receiver, id, value);
 
         vm.prank(spender);
         assertTrue(erc6909.transferFrom(sender, receiver, id, value));

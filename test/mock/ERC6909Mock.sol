@@ -9,6 +9,6 @@ contract ERC6909Mock is ERC6909 {
     function mint(address owner, uint256 id, uint256 amount) public {
         balanceOf[owner][id] += amount;
         totalSupply[id] += amount;
-        emit Transfer(address(0), owner, id, amount);
+        emit Transfer(msg.sender, address(0), owner, id, amount);
     }
 }

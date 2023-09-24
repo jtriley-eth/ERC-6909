@@ -30,7 +30,7 @@ contract ERC6909 is IERC6909 {
         if (balanceOf[msg.sender][id] < amount) revert InsufficientBalance();
         balanceOf[msg.sender][id] -= amount;
         balanceOf[receiver][id] += amount;
-        emit Transfer(msg.sender, receiver, id, amount);
+        emit Transfer(msg.sender, msg.sender, receiver, id, amount);
         return true;
     }
 
@@ -50,7 +50,7 @@ contract ERC6909 is IERC6909 {
         if (balanceOf[sender][id] < amount) revert InsufficientBalance();
         balanceOf[sender][id] -= amount;
         balanceOf[receiver][id] += amount;
-        emit Transfer(sender, receiver, id, amount);
+        emit Transfer(msg.sender, sender, receiver, id, amount);
         return true;
     }
 
