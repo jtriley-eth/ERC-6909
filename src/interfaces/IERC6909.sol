@@ -10,7 +10,7 @@ interface IERC6909 is IERC165 {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    event Transfer(address indexed caller, address indexed sender, address indexed receiver, uint256 id, uint256 amount);
+    event Transfer(address caller, address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
 
     /// @notice The event emitted when an operator is set.
     /// @param owner The address of the owner.
