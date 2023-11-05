@@ -14,7 +14,9 @@ contract ERC6909Test is Test {
     error InsufficientBalance();
     error InsufficientPermission();
 
-    event Transfer(address caller, address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
+    event Transfer(
+        address caller, address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount
+    );
 
     event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
