@@ -36,17 +36,9 @@ abstract contract ERC6909ib is ERC6909 {
     /// @notice The symbol of the token.
     string public symbol;
 
-    /// @notice The asset of the token.
-    ERC20 public immutable asset;
-
-    /// @notice The asset of the token.
-    uint8 public immutable decimals;
-
-    constructor(string memory _name, string memory _symbol, ERC20 _asset) {
+    constructor(string memory _name, string memory _symbol) {
         name = _name;
         symbol = _symbol;
-        asset = _asset;
-        decimals = _asset.decimals();
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -61,9 +53,9 @@ abstract contract ERC6909ib is ERC6909 {
     function deposit(uint256 tokenId, uint256 assets, address receiver) public virtual returns (uint256 shares) {
         // Check for rounding error since we round down in previewDeposit.
         require((shares = previewDeposit(tokenId, assets)) != 0, "ZERO_SHARES");
-
+        ERC20 _asset = asset(tokenId);
         // Need to transfer before minting or ERC777s could reenter.
-        asset.safeTransferFrom(msg.sender, address(this), assets);
+        _asset.safeTransferFrom(msg.sender, address(this), assets);
 
         _mint(receiver, tokenId, shares);
 
@@ -80,8 +72,10 @@ abstract contract ERC6909ib is ERC6909 {
     function mint(uint256 tokenId, uint256 shares, address receiver) public virtual returns (uint256 assets) {
         assets = previewMint(tokenId, shares); // No need to check for rounding error, previewMint rounds up.
 
+        ERC20 _asset = asset(tokenId);
+
         // Need to transfer before minting or ERC777s could reenter.
-        asset.safeTransferFrom(msg.sender, address(this), assets);
+        _asset.safeTransferFrom(msg.sender, address(this), assets);
 
         _mint(receiver, tokenId, shares);
 
@@ -102,7 +96,7 @@ abstract contract ERC6909ib is ERC6909 {
         returns (uint256 shares)
     {
         shares = previewWithdraw(tokenId, assets); // No need to check for rounding error, previewWithdraw rounds up.
-
+        ERC20 _asset = asset(tokenId);
         if (msg.sender != owner) {
             uint256 allowed = allowance[owner][msg.sender][tokenId]; // Saves gas for limited approvals.
 
@@ -115,7 +109,7 @@ abstract contract ERC6909ib is ERC6909 {
 
         emit Withdraw(tokenId, msg.sender, receiver, owner, assets, shares);
 
-        asset.safeTransfer(receiver, assets);
+        _asset.safeTransfer(receiver, assets);
     }
 
     /// @dev Redeems shares for assets.
@@ -134,6 +128,7 @@ abstract contract ERC6909ib is ERC6909 {
 
             if (allowed != type(uint256).max) allowance[owner][msg.sender][tokenId] = allowed - shares;
         }
+        ERC20 _asset = asset(tokenId);
 
         // Check for rounding error since we round down in previewRedeem.
         require((assets = previewRedeem(tokenId, shares)) != 0, "ZERO_ASSETS");
@@ -144,7 +139,7 @@ abstract contract ERC6909ib is ERC6909 {
 
         emit Withdraw(tokenId, msg.sender, receiver, owner, assets, shares);
 
-        asset.safeTransfer(receiver, assets);
+        _asset.safeTransfer(receiver, assets);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -262,4 +257,11 @@ abstract contract ERC6909ib is ERC6909 {
         balanceOf[account][tokenId] -= shares;
         emit Transfer(msg.sender, account, address(0), tokenId, shares);
     }
+
+    /*//////////////////////////////////////////////////////////////
+                                MISC
+    //////////////////////////////////////////////////////////////*/
+    function asset(uint256 tokenId) public view virtual returns (ERC20);
+
+    function decimals(uint256 tokenId) public view virtual returns (uint8);
 }

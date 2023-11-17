@@ -18,14 +18,14 @@ contract ERC4626Test is Test {
     function invariantMetadata() public {
         assertEq(vault.name(), "Mock Token Vault");
         assertEq(vault.symbol(), "vwTKN");
-        assertEq(vault.decimals(), 18);
+        assertEq(vault.decimals(0), 18);
     }
 
     function testMetadata(string calldata name, string calldata symbol) public {
         ERC6909ibMock vlt = new ERC6909ibMock(underlying, name, symbol);
         assertEq(vlt.name(), name);
         assertEq(vlt.symbol(), symbol);
-        assertEq(address(vlt.asset()), address(underlying));
+        assertEq(address(vlt.asset(0)), address(underlying));
     }
 
     function testSingleDepositWithdraw(uint128 amount) public {
