@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-interface Interface {
+interface IERC6909ib {
     event Approval(address indexed owner, address indexed spender, uint256 indexed id, uint256 amount);
     event Deposit(uint256 indexed id, address indexed caller, address indexed owner, uint256 assets, uint256 shares);
     event OperatorSet(address indexed owner, address indexed spender, bool approved);
