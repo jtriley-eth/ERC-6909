@@ -5,21 +5,31 @@ import {ERC6909} from "./ERC6909.sol";
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
-// Interest bearing ERC6909
 
+/// @title Interest bearing ERC6909
+/// @author mergd (@mergd)
 abstract contract ERC6909ib is ERC6909 {
     using SafeTransferLib for ERC20;
     using FixedPointMathLib for uint256;
 
-    /// @dev Total supply for a token
+    /// @notice Total supply for a token.
     mapping(uint256 tokenId => uint256 supply) public totalSupply;
 
-    /*//////////////////////////////////////////////////////////////
-                                 EVENTS
-    //////////////////////////////////////////////////////////////*/
-
+    /// @dev Logged on deposit.
+    /// @param id The id of the token.
+    /// @param caller The caller of the deposit function.
+    /// @param owner The depositor.
+    /// @param assets The number of assets.
+    /// @param shares The number of shares.
     event Deposit(uint256 indexed id, address indexed caller, address indexed owner, uint256 assets, uint256 shares);
 
+    /// @dev Logged on withdrawal.
+    /// @param id The id of the token.
+    /// @param caller The caller of the withdrawal function.
+    /// @param receiver The receiver of the withdrawal.
+    /// @param owner The withdrawer.
+    /// @param assets The number of assets.
+    /// @param shares The number of shares.
     event Withdraw(
         uint256 indexed id,
         address caller,
@@ -28,10 +38,6 @@ abstract contract ERC6909ib is ERC6909 {
         uint256 assets,
         uint256 shares
     );
-
-    /*//////////////////////////////////////////////////////////////
-                               IMMUTABLES
-    //////////////////////////////////////////////////////////////*/
 
     /// @notice The name of the token.
     string public name;
@@ -44,11 +50,7 @@ abstract contract ERC6909ib is ERC6909 {
         symbol = _symbol;
     }
 
-    /*//////////////////////////////////////////////////////////////
-                        DEPOSIT/WITHDRAWAL LOGIC
-    //////////////////////////////////////////////////////////////*/
-
-    /// @dev Deposits assets for shares.
+    /// @notice Deposits assets for shares.
     /// @param tokenId  The id of the token.
     /// @param assets The amount of assets to deposit.
     /// @param receiver The address of the receiver.
@@ -67,7 +69,7 @@ abstract contract ERC6909ib is ERC6909 {
         afterDeposit(tokenId, assets, shares);
     }
 
-    /// @dev Mints shares for assets.
+    /// @notice Mints shares for assets.
     /// @param tokenId The id of the token.
     /// @param shares The amount of shares to mint.
     /// @param receiver The address of the receiver.
@@ -87,7 +89,7 @@ abstract contract ERC6909ib is ERC6909 {
         afterDeposit(tokenId, assets, shares);
     }
 
-    /// @dev Withdraws assets for shares.
+    /// @notice Withdraws assets for shares.
     /// @param tokenId The id of the token.
     /// @param shares The amount of shares to withdraw.
     /// @param receiver The address of the receiver.
@@ -115,7 +117,7 @@ abstract contract ERC6909ib is ERC6909 {
         _asset.safeTransfer(receiver, assets);
     }
 
-    /// @dev Redeems shares for assets.
+    /// @notice Redeems shares for assets.
     /// @param tokenId The id of the token.
     /// @param shares The amount of shares to redeem.
     /// @param receiver The address of the receiver.
@@ -145,15 +147,19 @@ abstract contract ERC6909ib is ERC6909 {
         _asset.safeTransfer(receiver, assets);
     }
 
-    /*//////////////////////////////////////////////////////////////
-                            ACCOUNTING LOGIC
-    //////////////////////////////////////////////////////////////*/
-    /// @dev Returns the total assets of a token.
+    /// @notice Returns the total assets of a token.
     /// @param tokenId The id of the token.
-    /// @return assets The total assets of the tokenId
+    /// @return assets The total assets of the tokenId.
     function totalAssets(uint256 tokenId) public view virtual returns (uint256);
 
-    /// @dev Returns the shares of a token for a given amount of assets.
+    /// @notice Returns the address of a token.
+    /// @param tokenId The id of the token.
+    /// @return asset The asset of the tokenId.
+    function asset(uint256 tokenId) public view virtual returns (ERC20);
+
+    function decimals(uint256 tokenId) public view virtual returns (uint8);
+
+    /// @notice Returns the shares of a token for a given amount of assets.
     /// @param tokenId The id of the token.
     /// @param assets The amount of assets.
     /// @return shares The conversion of the assets to shares.
@@ -163,7 +169,7 @@ abstract contract ERC6909ib is ERC6909 {
         return supply == 0 ? assets : assets.mulDivDown(supply, totalAssets(tokenId));
     }
 
-    /// @dev Returns the assets of a token for a given amount of shares.
+    /// @notice Returns the assets of a token for a given amount of shares.
     /// @param tokenId The id of the token.
     /// @param shares The amount of shares.
     /// @return assets The conversion of the shares to assets.
@@ -173,7 +179,7 @@ abstract contract ERC6909ib is ERC6909 {
         return supply == 0 ? shares : shares.mulDivDown(totalAssets(tokenId), supply);
     }
 
-    /// @dev Preview depositing assets for shares.
+    /// @notice Preview depositing assets for shares.
     /// @param tokenId The id of the token.
     /// @param assets The amount of shares.
     /// @return shares Preview of the conversion of the assets to shares.
@@ -181,59 +187,72 @@ abstract contract ERC6909ib is ERC6909 {
         return convertToShares(tokenId, assets);
     }
 
-    /// @dev Preview minting shares for assets.
+    /// @notice Preview minting shares for assets.
+    /// @param tokenId The id of the token.
+    /// @param shares The number of shares to preview.
+    /// @return preview Preview of the mint.
     function previewMint(uint256 tokenId, uint256 shares) public view virtual returns (uint256) {
         uint256 supply = totalSupply[tokenId]; // Saves an extra SLOAD if totalSupply is non-zero.
 
         return supply == 0 ? shares : shares.mulDivUp(totalAssets(tokenId), supply);
     }
 
-    /// @dev Preview withdrawing shares for assets.
+    /// @notice Preview withdrawing shares for assets.
+    /// @param tokenId The id of the token.
+    /// @param assets The number of assets to preview.
+    /// @return withdrawal Preview of the withdrawal.
     function previewWithdraw(uint256 tokenId, uint256 assets) public view virtual returns (uint256) {
         uint256 supply = totalSupply[tokenId]; // Saves an extra SLOAD if totalSupply is non-zero.
 
         return supply == 0 ? assets : assets.mulDivUp(supply, totalAssets(tokenId));
     }
-    /// @dev Preview redeeming shares for assets.
 
+    /// @notice Preview redeeming shares for assets.
+    /// @param tokenId The id of the token.
+    /// @param shares The number of shares to preview.
+    /// @return redeemable The amount redeemable.
     function previewRedeem(uint256 tokenId, uint256 shares) public view virtual returns (uint256) {
         return convertToAssets(tokenId, shares);
     }
 
-    /*//////////////////////////////////////////////////////////////
-                     DEPOSIT/WITHDRAWAL LIMIT LOGIC
-    //////////////////////////////////////////////////////////////*/
-    /// @dev Returns the maximum amount of assets that can be deposited.
+    /// @notice Returns the maximum amount of assets that can be deposited.
+    /// @return max Maximum deposit.
     function maxDeposit(uint256, address) public view virtual returns (uint256) {
         return type(uint256).max;
     }
-    /// @dev Returns the maximum amount of assets that can be minted.
 
+    /// @notice Returns the maximum amount of assets that can be minted.
+    /// @return max Maximum mint.
     function maxMint(uint256, address) public view virtual returns (uint256) {
         return type(uint256).max;
     }
-    /// @dev Returns the maximum amount of assets that can be withdrawn.
 
+    /// @notice Returns the maximum amount of assets that can be withdrawn.
+    /// @param tokenId The id of the token.
+    /// @param owner The owner of the assets.
+    /// @return max Maximum withdrawal.
     function maxWithdraw(uint256 tokenId, address owner) public view virtual returns (uint256) {
         return convertToAssets(tokenId, balanceOf[owner][tokenId]);
     }
-    /// @dev Returns the maximum amount of shares that can be redeemed.
 
+    /// @notice Returns the maximum amount of shares that can be redeemed.
+    /// @param tokenId The id of the token.
+    /// @param owner The owner of the balance.
     function maxRedeem(uint256 tokenId, address owner) public view virtual returns (uint256) {
         return balanceOf[owner][tokenId];
     }
 
-    /*//////////////////////////////////////////////////////////////
-                          INTERNAL HOOKS LOGIC
-    //////////////////////////////////////////////////////////////*/
     /// @dev Hook called before withdrawal.
+    /// @param tokenId The id of the token.
+    /// @param assets The number of assets.
+    /// @param shares The number of shares.
     function beforeWithdraw(uint256 tokenId, uint256 assets, uint256 shares) internal virtual {}
-    /// @dev Hook called after deposit. Validate if tokenId is valid here.
-    function afterDeposit(uint256 tokenId, uint256 assets, uint256 shares) internal virtual {}
 
-    /*//////////////////////////////////////////////////////////////
-                          MINTING AND BURNING
-    //////////////////////////////////////////////////////////////*/
+    /// @dev Hook called after deposit. Validate if tokenId is valid here.
+    /// @param tokenId The id of the token.
+    /// @param assets The number of assets.
+    /// @param shares The number of shares.
+    function afterDeposit(uint256 tokenId, uint256 assets, uint256 shares) internal virtual {}
 
     /// @dev Mints shares for an account. Solmate's 6909 already has this.
     /// @param account The address of the account.
@@ -260,11 +279,4 @@ abstract contract ERC6909ib is ERC6909 {
         balanceOf[account][tokenId] -= shares;
         emit Transfer(msg.sender, account, address(0), tokenId, shares);
     }
-
-    /*//////////////////////////////////////////////////////////////
-                                MISC
-    //////////////////////////////////////////////////////////////*/
-    function asset(uint256 tokenId) public view virtual returns (ERC20);
-
-    function decimals(uint256 tokenId) public view virtual returns (uint8);
 }
