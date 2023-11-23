@@ -158,7 +158,7 @@ contract ERC6909Test is Test {
     function testSupportsInterface() public {
         // type(Ierc6909).interfaceId
         // type(IERC165).interfaceId
-        assertTrue(erc6909.supportsInterface(0xb2e69f8a));
+        assertTrue(erc6909.supportsInterface(0x0f632fb3));
         assertTrue(erc6909.supportsInterface(0x01ffc9a7));
     }
 
