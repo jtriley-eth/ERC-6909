@@ -27,11 +27,6 @@ interface IERC6909 is IERC165 {
     /// @param amount The amount of the token.
     event Approval(address indexed owner, address indexed spender, uint256 indexed id, uint256 amount);
 
-    /// @notice The total supply of each id.
-    /// @param id The id of the token.
-    /// @return amount The total supply of the token.
-    function totalSupply(uint256 id) external view returns (uint256 amount);
-
     /// @notice Owner balance of an id.
     /// @param owner The address of the owner.
     /// @param id The id of the token.

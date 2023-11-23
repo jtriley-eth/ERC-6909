@@ -29,12 +29,6 @@ contract ERC6909Test is Test {
     // ---------------------------------------------------------------------------------------------
     // Success Cases
 
-    function testTotalSupply() public {
-        erc6909.mint(alice, tokenId, 1);
-
-        assertEq(erc6909.totalSupply(tokenId), 1);
-    }
-
     function testBalanceOf() public {
         erc6909.mint(alice, tokenId, 1);
 
@@ -317,12 +311,6 @@ contract ERC6909Test is Test {
 
     // ---------------------------------------------------------------------------------------------
     // Fuzz Tests
-
-    function testFuzzTotalSupply(uint256 id, uint256 value) public {
-        erc6909.mint(alice, id, value);
-
-        assertEq(erc6909.totalSupply(id), value);
-    }
 
     function testFuzzBalanceOf(address owner, uint256 id, uint256 value) public {
         erc6909.mint(owner, id, value);

@@ -11,6 +11,9 @@ abstract contract ERC6909ib is ERC6909 {
     using SafeTransferLib for ERC20;
     using FixedPointMathLib for uint256;
 
+    /// @dev Total supply for a token
+    mapping(uint256 tokenId => uint256 supply) public totalSupply;
+
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
