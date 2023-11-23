@@ -10,9 +10,6 @@ contract ERC6909 is IERC6909 {
     /// @dev Thrown when spender allowance for id is insufficient.
     error InsufficientPermission();
 
-    /// @notice The total supply of each id.
-    mapping(uint256 id => uint256 amount) public totalSupply;
-
     /// @notice Owner balance of an id.
     mapping(address owner => mapping(uint256 id => uint256 amount)) public balanceOf;
 

@@ -14,7 +14,9 @@ contract ERC6909Test is Test {
     error InsufficientBalance();
     error InsufficientPermission();
 
-    event Transfer(address caller, address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount);
+    event Transfer(
+        address caller, address indexed sender, address indexed receiver, uint256 indexed id, uint256 amount
+    );
 
     event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
@@ -26,12 +28,6 @@ contract ERC6909Test is Test {
 
     // ---------------------------------------------------------------------------------------------
     // Success Cases
-
-    function testTotalSupply() public {
-        erc6909.mint(alice, tokenId, 1);
-
-        assertEq(erc6909.totalSupply(tokenId), 1);
-    }
 
     function testBalanceOf() public {
         erc6909.mint(alice, tokenId, 1);
@@ -162,7 +158,7 @@ contract ERC6909Test is Test {
     function testSupportsInterface() public {
         // type(Ierc6909).interfaceId
         // type(IERC165).interfaceId
-        assertTrue(erc6909.supportsInterface(0xb2e69f8a));
+        assertTrue(erc6909.supportsInterface(0x0f632fb3));
         assertTrue(erc6909.supportsInterface(0x01ffc9a7));
     }
 
@@ -315,12 +311,6 @@ contract ERC6909Test is Test {
 
     // ---------------------------------------------------------------------------------------------
     // Fuzz Tests
-
-    function testFuzzTotalSupply(uint256 id, uint256 value) public {
-        erc6909.mint(alice, id, value);
-
-        assertEq(erc6909.totalSupply(id), value);
-    }
 
     function testFuzzBalanceOf(address owner, uint256 id, uint256 value) public {
         erc6909.mint(owner, id, value);
