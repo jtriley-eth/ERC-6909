@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.19;
 
-import "forge-std/Test.sol";
-
-import {MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
+import "../lib/forge-std/src/Test.sol";
+import {MockERC20} from "../lib/solmate/src/test/utils/mocks/MockERC20.sol";
 import {ERC6909ibMock} from "./mock/ERC6909ibMock.sol";
 
 contract ERC4626Test is Test {

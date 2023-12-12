@@ -2,9 +2,9 @@
 pragma solidity ^0.8.19;
 
 import {ERC6909} from "./ERC6909.sol";
-import {ERC20} from "solmate/tokens/ERC20.sol";
-import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
-import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
+import {ERC20} from "../lib/solmate/src/tokens/ERC20.sol";
+import {SafeTransferLib} from "../lib/solmate/src/utils/SafeTransferLib.sol";
+import {FixedPointMathLib} from "../lib/solmate/src/utils/FixedPointMathLib.sol";
 
 /// @title Interest bearing ERC6909
 /// @author mergd (@mergd)

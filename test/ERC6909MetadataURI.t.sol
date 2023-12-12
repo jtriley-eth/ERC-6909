@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "forge-std/Test.sol";
+import "../lib/forge-std/src/Test.sol";
 import "../src/ERC6909MetadataURI.sol";
 
 contract ERC6909MetadataURITest is Test {
