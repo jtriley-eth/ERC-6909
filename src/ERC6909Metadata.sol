@@ -6,10 +6,10 @@ import "./interfaces/IERC6909Metadata.sol";
 
 contract ERC6909Metadata is ERC6909, IERC6909Metadata {
     /// @notice The name of the token.
-    string public name = "Example ERC6909 Metadata";
+    mapping(uint256 id => string) public name;
 
     /// @notice The symbol of the token.
-    string public symbol = "EEM";
+    mapping(uint256 id => string) public symbol;
 
     /// @notice The number of decimals for each id.
     mapping(uint256 id => uint8 amount) public decimals;

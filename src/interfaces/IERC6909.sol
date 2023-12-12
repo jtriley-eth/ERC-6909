@@ -3,6 +3,8 @@ pragma solidity ^0.8.19;
 
 import "./IERC165.sol";
 
+/// @title ERC6909 Core Interface
+/// @author jtriley.eth
 interface IERC6909 is IERC165 {
     /// @notice The event emitted when a transfer occurs.
     /// @param caller The caller of the transfer.

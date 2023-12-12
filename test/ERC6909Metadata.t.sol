@@ -15,11 +15,15 @@ contract ERC6909MetadataTest is Test {
     }
 
     function testName() public {
-        assertEq(erc6909.name(), "Example ERC6909 Metadata");
+        assertEq(erc6909.name(tokenId), "");
+        erc6909.setName(tokenId, "Example Token Name");
+        assertEq(erc6909.name(tokenId), "Example Token Name");
     }
 
     function testSymbol() public {
-        assertEq(erc6909.symbol(), "EEM");
+        assertEq(erc6909.symbol(tokenId), "");
+        erc6909.setSymbol(tokenId, "ETS");
+        assertEq(erc6909.symbol(tokenId), "ETS");
     }
 
     function testDecimals() public {
@@ -28,6 +32,22 @@ contract ERC6909MetadataTest is Test {
         erc6909.setDecimals(tokenId, 18);
 
         assertEq(erc6909.decimals(tokenId), 18);
+    }
+
+    function testFuzzName(uint256 id, string memory name) public {
+        assertEq(erc6909.name(id), "");
+
+        erc6909.setName(id, name);
+
+        assertEq(erc6909.name(id), name);
+    }
+
+    function testFuzzSymbol(uint256 id, string memory symbol) public {
+        assertEq(erc6909.symbol(id), "");
+
+        erc6909.setSymbol(id, symbol);
+
+        assertEq(erc6909.symbol(id), symbol);
     }
 
     function testFuzzDecimals(uint256 id, uint8 decimals) public {
